@@ -3,6 +3,13 @@
  ****************************************/
 
 // TODO: Add mechanism to press against the phone screen for the primary trigger.
+// TODO: Lengthen the face guard to fully block out light from the sides.
+// TODO: Lens flange slots don't actually allow the lenses to rotate into them.
+// TODO: Lenses snap into the lens flange openings, maybe the opening should be wider?
+// TODO: Phone was a little thicker than the phone holder.
+// TODO: Case was taller than the width of the phone.  Should consider shinking the case size and adjusting the vertical offset to match.  Actually, maybe the vertical offset should be calculated based on the difference of phone width to case height.
+// TODO: Nose opening needs to be a little deeper.
+// TODO: Make the exterior of the case rounder.
 
 /*******************************
  *   Adjustable Measurements   *
@@ -44,7 +51,7 @@ NumberOfLensFlanges = 3;
 Phone = [140, 9, 75]; 
 
 // Thickness of the border that holds in the phone.
-PhoneHolderThickness = 3;
+PhoneHolderThickness = 1.5;
 
 // Nose Opening measurements
 // Width, depth, height
@@ -52,7 +59,7 @@ NoseOpening = [45, 35, 40];
 
 // Face Guard measurements
 FaceGuardDepth = 50;
-FaceGuardThickness = 2;
+FaceGuardThickness = 1;
 
 ///////////////////////////
 // Internal Measurements //
