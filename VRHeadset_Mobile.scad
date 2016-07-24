@@ -97,9 +97,16 @@ PhoneWidthOffset = (CaseSize.x - Phone.x) / 2;
 FaceGuard = [CaseSize.x, FaceGuardDepth, CaseSize.z];
 FaceGuardInterior = [
     CaseSize.x - FaceGuardThickness * 2, 
-    FaceGuardDepth, 
+    FaceGuardDepth + 2, 
     CaseSize.z - FaceGuardThickness * 2];
 FaceGuardArcRadius = FaceGuardInterior.x / 2;
+
+// Total size of the headset
+TotalSize = [
+    CaseSize.x,
+    CaseSize.y + PhoneHolder.y + FaceGuard.y,
+    CaseSize.z
+];
 
 // Dump key measurements to console for generating Cardboard profile
 echo("Key Measurements for Cardboard Profile:");
@@ -108,11 +115,24 @@ echo(InterLensDistance=IPD);
 echo(TrayToLensCenterDistance=LensVerticalDistance);
 
 // Modules
+module flattenedTube(size) {
+    echo(size);
+    intersection() {
+        cube(size);
+        rotate ([-90, 0, 0]) {
+            translate([size.x / 2, -size.z / 2, 0]) {
+                cylinder(h=size.y, d=size.x, $fa=6);
+            }
+        }
+    }
+}
+
 module lens() {
     rotate ([-90, 0, 0]) {
         cylinder(h=CaseSize.y+0.01, 
                  d1=LensDiameter, 
-                 d2=ViewDiameterAtPhone);
+                 d2=ViewDiameterAtPhone,
+                 $fa=6);
     }
 
     for (i = [0:360/NumberOfLensFlanges:360]) {
@@ -163,10 +183,10 @@ module phoneHolder() {
 
 module faceGuard() {
     difference() {
-        cube(FaceGuard);
+        flattenedTube(FaceGuard);
         // Hollow out the inside of the face guard
-        translate([FaceGuardThickness, 0, FaceGuardThickness]) {
-            cube(FaceGuardInterior);
+        translate([FaceGuardThickness, -1, FaceGuardThickness]) {
+            flattenedTube(FaceGuardInterior);
         }
         // Arc at the top and bottom
         translate([FaceGuardArcRadius + FaceGuardThickness, -FaceGuardArcRadius + FaceGuard.y, 0]) {
@@ -180,34 +200,39 @@ module faceGuard() {
 }
 
 // Case
-union() {
-    // Lens Holder
-    difference() {
-        cube(CaseSize);
+intersection() {
+    union() {
+        // Lens Holder
+        difference() {
+            cube(CaseSize);
 
-        // Left Lens
-        translate([CenterLeftLens.x, 0, CenterLeftLens.y]) {
-            lens();
+            // Left Lens
+            translate([CenterLeftLens.x, 0, CenterLeftLens.y]) {
+                lens();
+            }
+            
+            // Right Lens
+            translate([CenterRightLens.x, 0, CenterRightLens.y]) {
+                lens();
+            }
+            
+            // Nose hole
+            translate([CaseSize.x / 2, 0, 0]) {
+                noseHole();
+            }
+        }
+
+        // Phone Holder
+        translate([0, CaseSize.y, 0]) {
+            phoneHolder();
         }
         
-        // Right Lens
-        translate([CenterRightLens.x, 0, CenterRightLens.y]) {
-            lens();
-        }
-        
-        // Nose hole
-        translate([CaseSize.x / 2, 0, 0]) {
-            noseHole();
+        // Face Guard
+        translate([0, -FaceGuard.y, 0]) {
+            faceGuard();
         }
     }
-
-    // Phone Holder
-    translate([0, CaseSize.y, 0]) {
-        phoneHolder();
-    }
-    
-    // Face Guard
     translate([0, -FaceGuard.y, 0]) {
-        faceGuard();
+        flattenedTube(TotalSize);
     }
 }
