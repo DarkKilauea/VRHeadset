@@ -6,9 +6,6 @@
 // TODO: Lengthen the face guard to fully block out light from the sides.
 // TODO: Lens flange slots don't actually allow the lenses to rotate into them.
 // TODO: Lenses snap into the lens flange openings, maybe the opening should be wider?
-// TODO: Phone was a little thicker than the phone holder.
-// TODO: Case was taller than the width of the phone.  Should consider shinking the case size and adjusting the vertical offset to match.  Actually, maybe the vertical offset should be calculated based on the difference of phone width to case height.
-// TODO: Nose opening needs to be a little deeper.
 // TODO: Make the exterior of the case rounder.
 
 /*******************************
@@ -18,23 +15,18 @@
  *******************************/
 
 // Overall case size
-CaseSize = [140, 42, 85];
+// Width, Depth, Height
+CaseSize = [140, 42, 75];
 
 // Interpupillary Distance
 IPD = 75;
 
 // Diameter of the lenses at the eyes
-LensDiameter = 35;
+LensDiameter = 34;
 
 // Diameter of the area of the screen 
 // that will be viewed
-ViewDiameterAtPhone = 57;
-
-// Percentage of the total case height
-// from the bottom that indicates
-// where the center of the lenses are.
-// (ie. .5 would be exactly in the middle)
-LensVerticalOffsetPercentage = .42;
+ViewDiameterAtPhone = 60;
 
 // Width, Thickness, and Height of the 
 // protrusions on the lens that latch onto the frame.
@@ -48,14 +40,14 @@ NumberOfLensFlanges = 3;
 
 // Phone measurements
 // Height, Thickness, Width
-Phone = [140, 9, 75]; 
+Phone = [140, 11, 75]; 
 
 // Thickness of the border that holds in the phone.
 PhoneHolderThickness = 1.5;
 
 // Nose Opening measurements
 // Width, depth, height
-NoseOpening = [45, 35, 40]; 
+NoseOpening = [45, 40, 40]; 
 
 // Face Guard measurements
 FaceGuardDepth = 50;
@@ -70,13 +62,17 @@ FaceGuardThickness = 1;
 HalfIPD = IPD / 2;
 LensRadius = LensDiameter / 2;
 
+// Distance from the bottom of the case 
+// that indicates where the center of the lenses should be.
+LensVerticalDistance = Phone.z / 2;
+
 CenterLeftLens = [
     CaseSize.x / 2 - HalfIPD, 
-    CaseSize.z * LensVerticalOffsetPercentage];
+    LensVerticalDistance];
 CenterRightLens = [
     CaseSize.x / 2 + HalfIPD, 
-    CaseSize.z * LensVerticalOffsetPercentage];
-    
+    LensVerticalDistance];
+   
 LensFlangeOpeningDimensions = [
     LensFlangeDimensions.x,
     LensFlangeDimensions.y + LensFlangeInset,
@@ -104,6 +100,12 @@ FaceGuardInterior = [
     FaceGuardDepth, 
     CaseSize.z - FaceGuardThickness * 2];
 FaceGuardArcRadius = FaceGuardInterior.x / 2;
+
+// Dump key measurements to console for generating Cardboard profile
+echo("Key Measurements for Cardboard Profile:");
+echo(ScreenToLensDistance=CaseSize.y - 2);
+echo(InterLensDistance=IPD); 
+echo(TrayToLensCenterDistance=LensVerticalDistance);
 
 // Modules
 module lens() {
