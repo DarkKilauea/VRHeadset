@@ -139,6 +139,46 @@ module lens() {
     }
 }
 
+module noseHole() {
+    scale([1, NoseOpeningRatio, 1]) {
+         union() {
+            cylinder(h=NoseOpening.z - 5, 
+                     d1=NoseOpening.x, 
+                     d2=10);
+        }
+        translate([0, 0, NoseOpening.z - 7.1]) {
+            sphere(d=11);
+        }
+    }
+}
+
+module phoneHolder() {
+    difference() {
+        cube(PhoneHolder);
+        translate([PhoneWidthOffset, 0, PhoneHolderThickness]) {
+            cube(PhoneHolderInterior);
+        }
+    }
+}
+
+module faceGuard() {
+    difference() {
+        cube(FaceGuard);
+        // Hollow out the inside of the face guard
+        translate([FaceGuardThickness, 0, FaceGuardThickness]) {
+            cube(FaceGuardInterior);
+        }
+        // Arc at the top and bottom
+        translate([FaceGuardArcRadius + FaceGuardThickness, -FaceGuardArcRadius + FaceGuard.y, 0]) {
+            cylinder(h=FaceGuard.z, r=FaceGuardArcRadius);
+        }
+        // Nose Opening Cutout
+        translate([(FaceGuard.x / 2) - (NoseOpening.x / 2), 0, 0]) {
+            cube([NoseOpening.x, FaceGuard.y, FaceGuardThickness]);
+        }
+    }
+}
+
 // Case
 union() {
     // Lens Holder
@@ -157,45 +197,17 @@ union() {
         
         // Nose hole
         translate([CaseSize.x / 2, 0, 0]) {
-            scale([1, NoseOpeningRatio, 1]) {
-                 union() {
-                    cylinder(h=NoseOpening.z - 5, 
-                             d1=NoseOpening.x, 
-                             d2=10);
-                }
-                translate([0, 0, NoseOpening.z - 7.1]) {
-                    sphere(d=11);
-                }
-            }
+            noseHole();
         }
     }
 
     // Phone Holder
     translate([0, CaseSize.y, 0]) {
-        difference() {
-            cube(PhoneHolder);
-            translate([PhoneWidthOffset, 0, PhoneHolderThickness]) {
-                cube(PhoneHolderInterior);
-            }
-        }
+        phoneHolder();
     }
     
     // Face Guard
     translate([0, -FaceGuard.y, 0]) {
-        difference() {
-            cube(FaceGuard);
-            // Hollow out the inside of the face guard
-            translate([FaceGuardThickness, 0, FaceGuardThickness]) {
-                cube(FaceGuardInterior);
-            }
-            // Arc at the top and bottom
-            translate([FaceGuardArcRadius + FaceGuardThickness, -FaceGuardArcRadius + FaceGuard.y, 0]) {
-                cylinder(h=FaceGuard.z, r=FaceGuardArcRadius);
-            }
-            // Nose Opening Cutout
-            translate([(FaceGuard.x / 2) - (NoseOpening.x / 2), 0, 0]) {
-                cube([NoseOpening.x, FaceGuard.y, FaceGuardThickness]);
-            }
-        }
+        faceGuard();
     }
 }
