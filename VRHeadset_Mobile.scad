@@ -3,10 +3,7 @@
  ****************************************/
 
 // TODO: Add mechanism to press against the phone screen for the primary trigger.
-// TODO: Lengthen the face guard to fully block out light from the sides.
 // TODO: Lens flange slots don't actually allow the lenses to rotate into them.
-// TODO: Lenses snap into the lens flange openings, maybe the opening should be wider?
-// TODO: Make the exterior of the case rounder.
 
 /*******************************
  *   Adjustable Measurements   *
@@ -30,7 +27,7 @@ ViewDiameterAtPhone = 60;
 
 // Width, Thickness, and Height of the 
 // protrusions on the lens that latch onto the frame.
-LensFlangeDimensions = [10, 2, 3];
+LensFlangeDimensions = [11, 2.5, 4];
 
 // Distance the lens is inset into the frame
 LensFlangeInset = 1;
@@ -40,7 +37,7 @@ NumberOfLensFlanges = 3;
 
 // Phone measurements
 // Height, Thickness, Width
-Phone = [140, 11, 75]; 
+Phone = [140, 10, 75]; 
 
 // Thickness of the border that holds in the phone.
 PhoneHolderThickness = 1.5;
@@ -116,7 +113,6 @@ echo(TrayToLensCenterDistance=LensVerticalDistance);
 
 // Modules
 module flattenedTube(size) {
-    echo(size);
     intersection() {
         cube(size);
         rotate ([-90, 0, 0]) {
